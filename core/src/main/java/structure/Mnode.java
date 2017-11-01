@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class Mnode implements Serializable {
 
+    public String type="";
     public Mnode parent;
     private String tagName = "";
     private String value = "";
