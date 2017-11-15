@@ -2,19 +2,21 @@ package structure;
 
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class Mnode implements Serializable {
 
-    public String type="";
-    public Mnode parent;
+    public int type=0;
+    public Mnode parent=null;
     private String tagName = "";
     private String value = "";
-    private Map<String, String> attributes;
-    private List<Mnode> childMnodes;
+    private Map<String, String> attributes=new HashMap<String, String>();
+    List<Mnode> childMnodes=new ArrayList<>();
+    Mnode(){}
+    Mnode (String name){
+        this.tagName=name;
+    }
 
     public String getTagName() {
         return tagName;
@@ -32,9 +34,7 @@ public class Mnode implements Serializable {
     }
 
     public void setValue(String value) {
-        if (value == null) {
-            throw new NullPointerException("properties");
-        }
+
         this.value = value;
     }
 
@@ -76,31 +76,42 @@ public class Mnode implements Serializable {
         }
     }
 
-    public void print(Mnode mnode){
-        if(mnode==null){return;}
-        if(!mnode.tagName.equals("#text")&&!mnode.tagName.equals("#cdata")){
-            System.out.print("<");
-            System.out.print(mnode.tagName);
-            if(!mnode.attributes.isEmpty()){
-                Iterator<String> key=mnode.attributes.keySet().iterator();
-                Iterator<String> values=mnode.attributes.values().iterator();
-                while(key.hasNext()){
-                    System.out.print(" "+key.next()+"=\""+values.next()+"\" ");
-                }
-                System.out.println(">");
+    public  void printMnode(Mnode mnode) {
+
+
+
+           if(mnode.type==0){
+               System.out.println("<?xml version=\"1.0\"?>");
+           }
+           if(!mnode.tagName.equals("")){
+            System.out.print("<" + mnode.getTagName());
+            Map<String, String> nm = mnode.getAttributes();
+            for (int i = 0; i < nm.size(); i++) {
+                Iterator<String> itr = nm.keySet().iterator();
+                Iterator<String> itr2 = nm.values().iterator();
+                System.out.print(" " + itr.next() + "=" + itr2.next() + " ");
             }
-            if(!mnode.childMnodes.isEmpty()){
-                List<Mnode> mnodeList=mnode.childMnodes;
-                for (int i = 0; i <mnodeList.size() ; i++) {
-                    print(mnodeList.get(i));
-                }
+            System.out.print(">");}
+
+
+            if (mnode.getChildMnodes().size() == 0) {
+                System.out.print(mnode.getValue());
+                System.out.print("</"+mnode.getTagName()+">");}
+
+        List<Mnode> list = mnode.getChildMnodes();
+            for (int i = 0; i < list.size(); i++){
+
+                printMnode(list.get(i));
+                if(mnode.getTagName()!=""){
+                System.out.println("</"+mnode.getTagName()+">");}}
             }
-            System.out.print("</"+mnode.tagName+">");
-        }
-        if(mnode.tagName.equals("#text")){
-            System.out.print(mnode.value);
-        }
-    }
+
+
+
+
+
+
+
 
 
 
