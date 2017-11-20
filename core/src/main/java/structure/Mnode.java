@@ -76,6 +76,32 @@ public class Mnode implements Serializable {
         }
     }
 
+    public List<Mnode> getMnode(   String tagName,String atr,String atrVal,String text ){
+        List<Mnode> list = new ArrayList<>();
+        get(this,list,tagName,atr,atrVal,text);
+        return list;
+    }
+
+    private void get(Mnode root,List<Mnode> list,String tagName,String atr,String atrVal,String text){
+        if(root==null){ return;}
+        if(chekParams(root,tagName,atr,atrVal,text)){
+            list.add(root);
+            return;
+        }
+
+        for (int i = 0; i <root.childMnodes.size() ; i++) {
+            get(root.childMnodes.get(i),list,tagName,atr,atrVal,text);
+        }
+    }
+
+    private boolean chekParams(Mnode mnode,String tagName,String atr,String atrVal,String text){
+        if(tagName==null||tagName.equals(mnode.tagName)&&atr==null||mnode.attributes.containsKey(atr)&&atrVal==null||mnode.attributes.containsValue(atrVal)&&text==null||text.equals(mnode.value)){
+            return true;
+        }
+
+        else {return false;}
+    }
+
     public  void printMnode(Mnode mnode) {
 
 
